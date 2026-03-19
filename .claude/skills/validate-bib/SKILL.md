@@ -1,6 +1,9 @@
 ---
 name: validate-bib
 description: Validate bibliography entries against citations in all lecture files. Find missing entries and unused references.
+disable-model-invocation: true
+context: fork
+agent: Explore
 allowed-tools: ["Read", "Grep", "Glob"]
 ---
 

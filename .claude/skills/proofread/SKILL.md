@@ -2,7 +2,8 @@
 name: proofread
 description: Run the proofreading protocol on lecture files. Checks grammar, typos, overflow, consistency, and academic writing quality. Produces a report without editing files.
 argument-hint: "[filename or 'all']"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
+context: fork
+allowed-tools: ["Read", "Grep", "Glob", "Write", "Agent"]
 ---
 
 # Proofread Lecture Files
@@ -15,7 +16,19 @@ Run the mandatory proofreading protocol on lecture files. This produces a report
    - If `$ARGUMENTS` is a specific filename: review that file only
    - If `$ARGUMENTS` is "all": review all lecture files in `Slides/` and `Quarto/`
 
-2. **For each file, launch the proofreader agent** that checks for:
+2. **For each file, launch a proofreader agent.** When reviewing multiple files (e.g., `$ARGUMENTS` is "all"), launch **all agents simultaneously using the Agent tool with `run_in_background: true`**. Collect results from all agents using TaskOutput as they complete.
+
+   Each agent prompt MUST include:
+   - The full file path and file type (.tex or .qmd)
+   - The proofreading checklist below
+   - This instruction: "This is a READ-ONLY review. Do NOT edit source files. Save your report to the specified path. Do NOT use AskUserQuestion."
+
+   Report: "Step 2: [N] proofreader agents launched in background. Waiting for results..."
+   As agents complete, report: "Step 2: [N]/[total] files complete."
+
+   **Agent failure handling:** If any agent fails, continue with remaining agents. After all complete, retry failed agents once.
+
+   Each agent checks for:
 
    **GRAMMAR:** Subject-verb agreement, articles (a/an/the), prepositions, tense consistency
    **TYPOS:** Misspellings, search-and-replace artifacts, duplicated words

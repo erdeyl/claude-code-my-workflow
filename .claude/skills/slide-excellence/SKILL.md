@@ -2,8 +2,8 @@
 name: slide-excellence
 description: Multi-agent slide review (visual, pedagogy, proofreading). Use for comprehensive quality check before milestones.
 argument-hint: "[QMD or TEX filename]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 context: fork
+allowed-tools: ["Read", "Grep", "Glob", "Write", "Agent"]
 ---
 
 # Slide Excellence Review
@@ -17,6 +17,22 @@ Run a comprehensive multi-dimensional review of lecture slides. Multiple agents 
 Parse `$ARGUMENTS` for the filename. Resolve path in `Quarto/` or `Slides/`.
 
 ### 2. Run Review Agents in Parallel
+
+Launch **all applicable agents simultaneously using the Agent tool with `run_in_background: true`**. Collect results from all agents using TaskOutput as they complete.
+
+Each agent prompt MUST include:
+- The full file path and file type (.qmd or .tex)
+- The specific review dimension instructions (copied from below)
+- This instruction: "This is a READ-ONLY review. Do NOT use Edit or Write to modify source files. Save your report to the specified path. Do NOT use AskUserQuestion. All file reads, glob searches, and grep searches are pre-authorized."
+
+Report: "Step 2: [N] review agents launched in background. Waiting for results..."
+As agents complete, report: "Step 2: [N]/[total] reviews complete."
+
+**Agent failure handling:** If any agent fails to launch or crashes:
+1. Log the failure: agent name and error message
+2. Continue with remaining agents — do NOT abort
+3. After all other agents complete, attempt ONE retry of the failed agent
+4. If the retry also fails, note the missing dimension in the report
 
 **Agent 1: Visual Audit** (slide-auditor)
 - Overflow, font consistency, box fatigue, spacing, images

@@ -1,8 +1,9 @@
 ---
 name: translate-to-quarto
-description: Translate Beamer LaTeX to Quarto RevealJS. Multi-phase workflow with TikZ extraction and QA.
-argument-hint: "[LectureN_Topic.tex]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
+description: Translate a Beamer LaTeX lecture to Quarto RevealJS. Multi-phase workflow covering content translation, TikZ extraction, citation mapping, figure handling, overflow audit, and deployment.
+disable-model-invocation: true
+argument-hint: "[Beamer .tex filename, e.g., LectureN_Topic]"
+allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Agent"]
 context: fork
 ---
 
@@ -14,19 +15,27 @@ Full translation of a Beamer LaTeX lecture to Quarto RevealJS HTML slides.
 
 ---
 
-## Phase 0: Pre-Flight Checks
+## Phase 0: Pre-Flight Checks (Parallel)
 
-### 0A. Environment Parity Audit
-Scan Beamer for all custom environments. Verify CSS equivalents exist in your theme SCSS. If any are missing, create them FIRST.
+Launch **4 pre-flight agents simultaneously using the Agent tool with `run_in_background: true`**. Collect results from all agents using TaskOutput as they complete.
 
-### 0B. TikZ Freshness Verification
-Run `/extract-tikz` to verify SVGs match current Beamer source.
+Report: "Phase 0: 4 pre-flight agents launched in background. Waiting for results..."
 
-### 0C. RDS Data Inventory
-List all RDS files needed for interactive charts.
+**Agent failure handling:** If any agent fails, continue with remaining agents. Log the failure and address manually after other agents complete.
 
-### 0D. Citation Key Mapping
-Extract all citations from Beamer, map to bibliography keys.
+### 0A. Environment Parity Audit (Agent)
+Scan Beamer for all custom environments. Verify CSS equivalents exist in your theme SCSS. Report any missing environments.
+
+### 0B. TikZ Freshness Verification (Agent)
+Compare TikZ blocks in Beamer source against `extract_tikz.tex`. Report if SVGs need regeneration.
+
+### 0C. RDS Data Inventory (Agent)
+List all RDS files needed for interactive charts. Verify they exist and report any missing files.
+
+### 0D. Citation Key Mapping (Agent)
+Extract all citations from Beamer, map to bibliography keys. Report any unresolved keys.
+
+**After all 4 agents complete:** Address any missing CSS environments (0A) and regenerate TikZ SVGs (0B) BEFORE proceeding to Phase 1.
 
 ## Phase 1: Pre-Translation Preparation
 - Read complete Beamer source, count frames

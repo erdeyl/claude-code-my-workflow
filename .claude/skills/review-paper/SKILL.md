@@ -2,7 +2,8 @@
 name: review-paper
 description: Comprehensive manuscript review covering argument structure, econometric specification, citation completeness, and potential referee objections
 argument-hint: "[paper filename in master_supporting_docs/ or path to .tex/.pdf]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
+context: fork
+allowed-tools: ["Read", "Grep", "Glob", "Write", "Agent"]
 ---
 
 # Manuscript Review
@@ -22,9 +23,21 @@ Produce a thorough, constructive review of an academic manuscript — the kind o
 
 2. **Read the full paper** end-to-end. For long PDFs, read in chunks (5 pages at a time).
 
-3. **Evaluate across 6 dimensions** (see below).
+3. **Evaluate across 6 dimensions in parallel.**
 
-4. **Generate 3-5 "referee objections"** — the tough questions a top referee would ask.
+   Launch **6 review agents simultaneously using the Agent tool with `run_in_background: true`** — one per dimension below. Each agent receives the paper content (or the relevant sections) and its specific review checklist.
+
+   Each agent prompt MUST include:
+   - The paper path and content (or section references for long papers)
+   - The specific dimension checklist (copied from below)
+   - This instruction: "This is a READ-ONLY review. Do NOT use AskUserQuestion. Report findings with specific section/page references. If a tool call is denied, skip it and continue."
+
+   Report: "Step 3: 6 review agents launched in background. Waiting for results..."
+   As agents complete, report: "Step 3: [N]/6 dimensions complete."
+
+   **Agent failure handling:** If any agent fails, continue with remaining agents. After all complete, retry failed agents once. If retry fails, note the missing dimension in the report.
+
+4. **Generate 3-5 "referee objections"** — synthesize across all dimension results to identify the tough questions a top referee would ask.
 
 5. **Produce the review report.**
 

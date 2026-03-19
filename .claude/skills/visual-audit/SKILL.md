@@ -2,7 +2,8 @@
 name: visual-audit
 description: Perform adversarial visual audit of Quarto or Beamer slides checking for overflow, font consistency, box fatigue, and layout issues.
 argument-hint: "[QMD or TEX filename]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
+context: fork
+allowed-tools: ["Read", "Grep", "Glob", "Write", "Agent"]
 ---
 
 # Visual Audit of Slide Deck
