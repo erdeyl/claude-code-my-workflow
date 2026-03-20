@@ -2,15 +2,36 @@
 name: lit-review
 description: Structured literature search and synthesis with citation extraction and gap identification
 argument-hint: "[topic, paper title, or research question]"
+allowed-tools: Read, Grep, Glob, Write, Bash(touch *), Bash(find *), Agent, WebSearch, WebFetch
 context: fork
-allowed-tools: ["Read", "Grep", "Glob", "Write", "WebSearch", "WebFetch"]
 ---
 
 # Literature Review
 
+ultrathink
+
+
 Conduct a structured literature search and synthesis on the given topic.
 
 **Input:** `$ARGUMENTS` — a topic, paper title, research question, or phenomenon to investigate.
+
+## Parallel Search Pattern (Fan-Out / Fan-In)
+
+Launch 2 parallel search agents, then synthesize findings:
+
+### Agent 1: Local Repository Search (Sonnet)
+- Search the project for uploaded papers: auto-detect `master_supporting_docs/`, `documents/`, `papers/`, or similar directories
+- Grep/Glob for relevant content in existing `.bib` files, `.tex` files, `.qmd` files
+- Extract citations and findings from any locally available papers
+
+### Agent 2: Web Literature Search (Sonnet)
+- Use `WebSearch` to find recent publications on the topic
+- Use `WebFetch` to access working paper repositories (NBER, SSRN, arXiv, etc.)
+- Search for key authors and recent survey articles
+- Focus on last 5-10 years unless seminal papers are older
+
+### Fan-In: Synthesis (Main Context)
+Combine findings from both agents and organize into the structured output below.
 
 ---
 
@@ -18,11 +39,7 @@ Conduct a structured literature search and synthesis on the given topic.
 
 1. **Parse the topic** from `$ARGUMENTS`. If a specific paper is named, use it as the anchor.
 
-2. **Search for related work** using available tools:
-   - Check `master_supporting_docs/supporting_papers/` for uploaded papers
-   - Use `WebSearch` to find recent publications (if available)
-   - Use `WebFetch` to access working paper repositories (if available)
-   - Read any existing `.bib` file for papers already in the project
+2. **Launch parallel search agents** as described above.
 
 3. **Organize findings** into these categories:
    - **Theoretical contributions** — models, frameworks, mechanisms
@@ -37,7 +54,7 @@ Conduct a structured literature search and synthesis on the given topic.
 
 5. **Extract citations** in BibTeX format for all papers discussed.
 
-6. **Save the report** to `quality_reports/lit_review_[sanitized_topic].md`
+6. **Save the report** to auto-detected output directory (`quality_reports/`, `notes/`, or current directory). Filename: `lit_review_[sanitized_topic].md`
 
 ---
 
@@ -50,7 +67,6 @@ Conduct a structured literature search and synthesis on the given topic.
 **Query:** [Original query from user]
 
 ## Summary
-
 [2-3 paragraph overview of the state of the literature]
 
 ## Key Papers
@@ -75,20 +91,15 @@ Conduct a structured literature search and synthesis on the given topic.
 [Methods relevant to the topic]
 
 ## Gaps and Opportunities
-
 1. [Gap 1 — what's missing and why it matters]
 2. [Gap 2]
 3. [Gap 3]
 
 ## Suggested Next Steps
-
 - [Concrete actions: papers to read, data to obtain, methods to consider]
 
 ## BibTeX Entries
-
-```bibtex
-@article{...}
-```
+[BibTeX entries for all papers discussed]
 ```
 
 ---

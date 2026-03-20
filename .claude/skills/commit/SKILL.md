@@ -1,11 +1,15 @@
 ---
 name: commit
-description: Stage, commit, create PR, and merge to main. Use for the standard commit-PR-merge cycle.
+description: Stages, commits, creates PR, and merges to main. Use for the standard commit-PR-merge cycle.
 argument-hint: "[optional: commit message]"
-allowed-tools: ["Bash", "Read", "Glob"]
+disable-model-invocation: true
+allowed-tools: Bash(git *), Bash(gh *), Bash(touch *), Bash(find *), Read, Glob, WebSearch
 ---
 
 # Commit, PR, and Merge
+
+ultrathink
+
 
 Stage changes, commit with a descriptive message, create a PR, and merge to main.
 
@@ -55,7 +59,7 @@ gh pr create --title "<short title>" --body "$(cat <<'EOF'
 ## Test plan
 <checklist>
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )"
 ```

@@ -2,10 +2,13 @@
 name: interview-me
 description: Interactive interview to formalize a research idea into a structured specification with hypotheses and empirical strategy
 argument-hint: "[brief topic or 'start fresh']"
-allowed-tools: ["Read", "Write"]
+allowed-tools: Read, Write, Bash(touch *), Bash(find *), WebSearch
 ---
 
 # Research Interview
+
+ultrathink
+
 
 Conduct a structured interview to help formalize a research idea into a concrete specification.
 
@@ -17,7 +20,7 @@ Conduct a structured interview to help formalize a research idea into a concrete
 
 This is a **conversational** skill. Instead of producing a report immediately, you conduct an interview by asking questions one at a time, probing deeper based on answers, and building toward a structured research specification.
 
-**Do NOT use AskUserQuestion.** Ask questions directly in your text responses, one or two at a time. Wait for the user to respond before continuing.
+Ask questions directly in your text responses, one or two at a time. Wait for the user to respond before continuing.
 
 ---
 
@@ -59,19 +62,15 @@ Once you have enough information (typically 5-8 exchanges), produce a **Research
 **Researcher:** [from conversation context]
 
 ## Research Question
-
 [Clear, specific question in one sentence]
 
 ## Motivation
-
 [2-3 paragraphs: why this matters, theoretical context, policy relevance]
 
 ## Hypothesis
-
 [Testable prediction with expected direction]
 
 ## Empirical Strategy
-
 - **Method:** [e.g., Difference-in-Differences with staggered adoption]
 - **Treatment:** [What varies]
 - **Control:** [Comparison group]
@@ -79,25 +78,21 @@ Once you have enough information (typically 5-8 exchanges), produce a **Research
 - **Robustness checks:** [Pre-trends, placebo tests, etc.]
 
 ## Data
-
 - **Primary dataset:** [Name, source, coverage]
 - **Key variables:** [Treatment, outcome, controls]
 - **Sample:** [Unit of observation, time period, N]
 
 ## Expected Results
-
 [What the researcher expects to find and why]
 
 ## Contribution
-
 [How this advances the literature — 2-3 sentences]
 
 ## Open Questions
-
 [Issues raised during the interview that need further thought]
 ```
 
-**Save to:** `quality_reports/research_spec_[sanitized_topic].md`
+**Save to:** Auto-detect output directory (`quality_reports/`, `notes/`, or current directory). Filename: `research_spec_[sanitized_topic].md`
 
 ---
 

@@ -1,130 +1,72 @@
 {
-  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
-      "Bash(git status *)",
-      "Bash(git diff *)",
-      "Bash(git log *)",
-      "Bash(git branch *)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
-      "Bash(git push *)",
-      "Bash(git pull *)",
-      "Bash(git fetch *)",
-      "Bash(git checkout *)",
-      "Bash(git merge *)",
-      "Bash(git stash *)",
-      "Bash(gh pr *)",
-      "Bash(gh run *)",
-      "Bash(gh api *)",
-      "Bash(gh pr list *)",
-      "Bash(gh pr view *)",
-      "Bash(gh pr merge *)",
-      "Bash(gh pr create *)",
-      "Bash(gh repo *)",
-      "Bash(xelatex *)",
-      "Bash(TEXINPUTS=*)",
-      "Bash(BIBINPUTS=*)",
-      "Bash(latexmk *)",
-      "Bash(bibtex *)",
-      "Bash(pdfinfo *)",
-      "Bash(pdf2svg *)",
-      "Bash(quarto render *)",
-      "Bash(Rscript *)",
-      "Bash(python3 *)",
-      "Bash(./scripts/sync_to_docs.sh *)",
-      "Bash(./scripts/sync_to_docs.sh)",
-      "Bash(chmod *)",
-      "Bash(open *)",
-      "Bash(xdg-open *)",
+      "Bash(black *)",
+      "Bash(brew *)",
+      "Bash(cat *)",
+      "Bash(cd *)",
+      "Bash(code *)",
+      "Bash(cut *)",
+      "Bash(diff *)",
+      "Bash(du *)",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(echo *)",
+      "Bash(file *)",
+      "Bash(find *)",
+      "Bash(head *)",
+      "Bash(jq *)",
+      "Bash(jupyter *)",
+      "Bash(jupyter-lab *)",
       "Bash(ls *)",
-      "Bash(wc *)",
+      "Bash(mypy *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(open *)",
+      "Bash(osascript *)",
+      "Bash(pip *)",
+      "Bash(pip3 *)",
+      "Bash(pipx *)",
+      "Bash(playwright *)",
+      "Bash(pnpm *)",
+      "Bash(pre-commit *)",
+      "Bash(pytest *)",
+      "Bash(python3 *)",
+      "Bash(R *)",
+      "Bash(Rscript *)",
+      "Bash(rg *)",
+      "Bash(ruff *)",
       "Bash(sort *)",
-      "Bash(for *)",
-      "Bash(gs *)",
-      "Bash(pdftk *)",
-      "Bash(mkdir *)"
+      "Bash(stat *)",
+      "Bash(stata-mp *)",
+      "Bash(swift *)",
+      "Bash(tail *)",
+      "Bash(tree *)",
+      "Bash(uv *)",
+      "Bash(wc *)",
+      "Bash(xcodebuild *)"
     ]
   },
   "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.sh",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-files.sh",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-compact.py",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
     "SessionStart": [
       {
-        "matcher": "compact|resume",
+        "matcher": "startup",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-compact-restore.py",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash|Task",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/context-monitor.py",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/verify-reminder.py",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-reminder.py",
-            "timeout": 10
+            "command": "$HOME/.claude/scripts/daily-skill-update.sh"
           }
         ]
       }
     ]
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
   }
 }

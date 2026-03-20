@@ -1,13 +1,16 @@
 ---
 name: translate-to-quarto
-description: Translate a Beamer LaTeX lecture to Quarto RevealJS. Multi-phase workflow covering content translation, TikZ extraction, citation mapping, figure handling, overflow audit, and deployment.
+description: Translate Beamer LaTeX to Quarto RevealJS. Multi-phase workflow with TikZ extraction and QA.
+argument-hint: "[LectureN_Topic.tex]"
 disable-model-invocation: true
-argument-hint: "[Beamer .tex filename, e.g., LectureN_Topic]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Agent"]
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash(quarto *), Bash(xelatex *), Bash(open *), Bash(touch *), Bash(find *), Agent, WebSearch
 context: fork
 ---
 
-# Beamer → Quarto Translation Workflow
+# Beamer to Quarto Translation Workflow
+
+ultrathink
+
 
 Full translation of a Beamer LaTeX lecture to Quarto RevealJS HTML slides.
 
@@ -15,38 +18,30 @@ Full translation of a Beamer LaTeX lecture to Quarto RevealJS HTML slides.
 
 ---
 
-## Phase 0: Pre-Flight Checks (Parallel)
+## Phase 0: Pre-Flight Checks
 
-Launch **4 pre-flight agents simultaneously using the Agent tool with `run_in_background: true`**. Collect results from all agents using TaskOutput as they complete.
+### 0A. Environment Parity Audit
+Scan Beamer for all custom environments. Verify CSS equivalents exist in your theme SCSS. If any are missing, create them FIRST.
 
-Report: "Phase 0: 4 pre-flight agents launched in background. Waiting for results..."
+### 0B. TikZ Freshness Verification
+Run `/extract-tikz` to verify SVGs match current Beamer source.
 
-**Agent failure handling:** If any agent fails, continue with remaining agents. Log the failure and address manually after other agents complete.
+### 0C. RDS Data Inventory
+List all RDS files needed for interactive charts.
 
-### 0A. Environment Parity Audit (Agent)
-Scan Beamer for all custom environments. Verify CSS equivalents exist in your theme SCSS. Report any missing environments.
-
-### 0B. TikZ Freshness Verification (Agent)
-Compare TikZ blocks in Beamer source against `extract_tikz.tex`. Report if SVGs need regeneration.
-
-### 0C. RDS Data Inventory (Agent)
-List all RDS files needed for interactive charts. Verify they exist and report any missing files.
-
-### 0D. Citation Key Mapping (Agent)
-Extract all citations from Beamer, map to bibliography keys. Report any unresolved keys.
-
-**After all 4 agents complete:** Address any missing CSS environments (0A) and regenerate TikZ SVGs (0B) BEFORE proceeding to Phase 1.
+### 0D. Citation Key Mapping
+Extract all citations from Beamer, map to bibliography keys.
 
 ## Phase 1: Pre-Translation Preparation
 - Read complete Beamer source, count frames
-- Inventory figures (TikZ → SVG, R plots → plotly, other → SVG)
+- Inventory figures (TikZ to SVG, R plots to plotly, other to SVG)
 
 ## Phase 2: Create QMD File with YAML Header
 - Standard RevealJS YAML with theme, logo, footer, bibliography
 - Setup chunk for R data loading if needed
 
 ## Phase 3: Slide-by-Slide Translation
-- Delegate to `beamer-translator` agent
+- Delegate to beamer-translator agent
 - 1:1 frame-to-slide mapping
 - Verbatim math, environment parity, no font reduction
 
@@ -75,4 +70,4 @@ Render, open in browser, verify all elements.
 Apply any corrections back to Beamer source.
 
 ## Phase 11: Documentation
-Update CLAUDE.md, session log, create PR.
+Update project docs, session log, create PR.

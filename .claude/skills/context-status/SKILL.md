@@ -1,18 +1,16 @@
 ---
 name: context-status
-description: |
-  Show current context status and session health.
-  Use to check how much context has been used, whether auto-compact is
-  approaching, and what state will be preserved.
-author: Claude Code Academic Workflow
-version: 1.0.0
-allowed-tools: ["Read", "Bash", "Glob"]
+description: Shows current context status and session health. Use to check how much context has been used and what state will be preserved.
+argument-hint: "[no arguments needed]"
+allowed-tools: Bash(cat *), Bash(ls *), Bash(touch *), Bash(find *), Read, Glob, WebSearch
 ---
 
-# /context-status — Check Session Health
+# Context Status — Check Session Health
 
-Show the current session status including context usage estimate, active plan,
-and preservation state.
+ultrathink
+
+
+Show the current session status including context usage estimate, active plan, and preservation state.
 
 ## What This Skill Shows
 
@@ -33,14 +31,16 @@ cat ~/.claude/sessions/*/context-monitor-cache.json 2>/dev/null | head -20
 
 ### Step 2: Find Active Plan
 
+Auto-detect plans directory. Look for `quality_reports/plans/`, `plans/`, `progress_logs/`, or similar:
+
 ```bash
-ls -lt quality_reports/plans/*.md 2>/dev/null | head -3
+find . -maxdepth 3 -name '*.md' -path '*/plan*' -type f 2>/dev/null | head -3
 ```
 
 ### Step 3: Find Session Log
 
 ```bash
-ls -lt quality_reports/session_logs/*.md 2>/dev/null | head -1
+find . -maxdepth 3 -name '*.md' -path '*/session*' -o -name '*.md' -path '*/progress*' 2>/dev/null | sort -r | head -1
 ```
 
 ### Step 4: Report Status
@@ -48,23 +48,23 @@ ls -lt quality_reports/session_logs/*.md 2>/dev/null | head -1
 Format the output:
 
 ```
-📊 Session Status
-─────────────────────────────────
+Session Status
+---
 Context Usage:  ~XX% (estimated)
 Auto-compact:   [approaching | not imminent]
 
-📋 Active Plan
-File:   quality_reports/plans/YYYY-MM-DD_description.md
+Active Plan
+File:   [plan path]
 Status: [draft | approved | in_progress | completed]
 Task:   [current unchecked task or "none"]
 
-📝 Session Log
-File:   quality_reports/session_logs/YYYY-MM-DD_description.md
+Session Log
+File:   [log path]
 
-✓ Preservation Check
-  • Pre-compact hook: [configured | missing]
-  • Post-compact restore: [configured | missing]
-  • Session state will be saved before compaction
+Preservation Check
+  - Pre-compact hook: [configured | missing]
+  - Post-compact restore: [configured | missing]
+  - Session state will be saved before compaction
 ```
 
 ## Notes

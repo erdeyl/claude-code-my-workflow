@@ -1,11 +1,15 @@
 ---
 name: extract-tikz
-description: Extract TikZ diagrams from Beamer source, compile to PDF, convert to SVG with 0-based indexing. Use when updating TikZ diagrams for Quarto slides.
+description: Extracts TikZ diagrams from Beamer source, compile to PDF, convert to SVG with 0-based indexing. Use when updating TikZ diagrams for Quarto slides.
 argument-hint: "[LectureN, e.g., Lecture2]"
-allowed-tools: ["Read", "Bash", "Glob"]
+disable-model-invocation: true
+allowed-tools: Read, Bash(xelatex *), Bash(pdfinfo *), Bash(pdf2svg *), Bash(./scripts/*), Bash(ls *), Bash(touch *), Bash(find *), Glob, WebSearch
 ---
 
 # Extract TikZ Diagrams to SVG
+
+ultrathink
+
 
 Extract TikZ diagrams from the Beamer source, compile to multi-page PDF, and convert each page to SVG for use in Quarto slides.
 
@@ -15,7 +19,7 @@ Extract TikZ diagrams from the Beamer source, compile to multi-page PDF, and con
 
 **Before compiling, verify that `extract_tikz.tex` matches the current Beamer source.**
 
-1. Find the Beamer source: `ls Slides/$ARGUMENTS*.tex`
+1. Find the Beamer source: auto-detect in `Slides/` or use `$ARGUMENTS` to locate `$ARGUMENTS*.tex`
 2. Extract all `\begin{tikzpicture}` blocks from Beamer
 3. Compare with `Figures/$ARGUMENTS/extract_tikz.tex`
 4. If ANY difference exists: update extract_tikz.tex from the Beamer source
@@ -61,4 +65,4 @@ cd ../..
 ### Step 7: Report results
 
 ## Source of Truth Reminder
-TikZ diagrams MUST be edited in the Beamer `.tex` file first, then copied verbatim to `extract_tikz.tex`. See `.claude/rules/single-source-of-truth.md`.
+TikZ diagrams MUST be edited in the Beamer `.tex` file first, then copied verbatim to `extract_tikz.tex`. See `.claude/rules/single-source-of-truth.md` (if present).

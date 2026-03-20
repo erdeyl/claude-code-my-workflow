@@ -1,16 +1,54 @@
 ---
 name: review-paper
 description: Comprehensive manuscript review covering argument structure, econometric specification, citation completeness, and potential referee objections
-argument-hint: "[paper filename in master_supporting_docs/ or path to .tex/.pdf]"
+argument-hint: "[paper filename in documents/ or path to .tex/.pdf]"
+allowed-tools: Read, Grep, Glob, Write, Bash(touch *), Bash(find *), Agent, WebSearch
 context: fork
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Agent"]
 ---
 
 # Manuscript Review
 
+ultrathink
+
+
 Produce a thorough, constructive review of an academic manuscript — the kind of report a top-journal referee would write.
 
-**Input:** `$ARGUMENTS` — path to a paper (.tex, .pdf, or .qmd), or a filename in `master_supporting_docs/`.
+**Input:** `$ARGUMENTS` — path to a paper (.tex, .pdf, or .qmd), or a filename in a documents directory.
+
+## Parallel Review Dimensions (Fan-Out / Fan-In)
+
+Launch 4 parallel agents for independent review, then fan-in for validation:
+
+### Agent 1: Argument Structure (Sonnet)
+- Is the research question clearly stated?
+- Does the introduction motivate the question effectively?
+- Is the logical flow sound (question -> method -> results -> conclusion)?
+- Are the conclusions supported by the evidence?
+- Are limitations acknowledged?
+
+### Agent 2: Econometric Specification (Opus)
+- Is the causal claim credible? Key identifying assumptions stated?
+- Correct standard errors (clustered? robust? bootstrap?)?
+- Appropriate functional form? Sample selection issues?
+- Multiple testing concerns?
+- Are point estimates economically meaningful?
+- Robustness checks adequate?
+
+### Agent 3: Literature Coverage (Sonnet)
+- Are the key papers cited?
+- Is prior work characterized accurately?
+- Is the contribution clearly differentiated from existing work?
+- Any missing citations that a referee would flag?
+
+### Agent 4: Writing Quality (Haiku)
+- Clarity and concision
+- Academic tone and consistent notation
+- Abstract effectiveness
+- Tables and figures self-contained
+- Typos, grammatical errors, formatting issues
+
+### Fan-In: Validation Pass (Main Context)
+Synthesize all 4 agent reports into a unified review. Resolve any contradictions between agents. Generate 3-5 "referee objections" — the tough questions a top referee would ask.
 
 ---
 
@@ -18,74 +56,16 @@ Produce a thorough, constructive review of an academic manuscript — the kind o
 
 1. **Locate and read the manuscript.** Check:
    - Direct path from `$ARGUMENTS`
-   - `master_supporting_docs/supporting_papers/$ARGUMENTS`
+   - Auto-detect in `master_supporting_docs/`, `documents/`, `papers/`
    - Glob for partial matches
 
 2. **Read the full paper** end-to-end. For long PDFs, read in chunks (5 pages at a time).
 
-3. **Evaluate across 6 dimensions in parallel.**
+3. **Launch 4 parallel review agents** as described above.
 
-   Launch **6 review agents simultaneously using the Agent tool with `run_in_background: true`** — one per dimension below. Each agent receives the paper content (or the relevant sections) and its specific review checklist.
+4. **Fan-in synthesis:** Generate unified review with referee objections.
 
-   Each agent prompt MUST include:
-   - The paper path and content (or section references for long papers)
-   - The specific dimension checklist (copied from below)
-   - This instruction: "This is a READ-ONLY review. Do NOT use AskUserQuestion. Report findings with specific section/page references. If a tool call is denied, skip it and continue."
-
-   Report: "Step 3: 6 review agents launched in background. Waiting for results..."
-   As agents complete, report: "Step 3: [N]/6 dimensions complete."
-
-   **Agent failure handling:** If any agent fails, continue with remaining agents. After all complete, retry failed agents once. If retry fails, note the missing dimension in the report.
-
-4. **Generate 3-5 "referee objections"** — synthesize across all dimension results to identify the tough questions a top referee would ask.
-
-5. **Produce the review report.**
-
-6. **Save to** `quality_reports/paper_review_[sanitized_name].md`
-
----
-
-## Review Dimensions
-
-### 1. Argument Structure
-- Is the research question clearly stated?
-- Does the introduction motivate the question effectively?
-- Is the logical flow sound (question → method → results → conclusion)?
-- Are the conclusions supported by the evidence?
-- Are limitations acknowledged?
-
-### 2. Identification Strategy
-- Is the causal claim credible?
-- What are the key identifying assumptions? Are they stated explicitly?
-- Are there threats to identification (omitted variables, reverse causality, measurement error)?
-- Are robustness checks adequate?
-- Is the estimator appropriate for the research design?
-
-### 3. Econometric Specification
-- Correct standard errors (clustered? robust? bootstrap?)?
-- Appropriate functional form?
-- Sample selection issues?
-- Multiple testing concerns?
-- Are point estimates economically meaningful (not just statistically significant)?
-
-### 4. Literature Positioning
-- Are the key papers cited?
-- Is prior work characterized accurately?
-- Is the contribution clearly differentiated from existing work?
-- Any missing citations that a referee would flag?
-
-### 5. Writing Quality
-- Clarity and concision
-- Academic tone
-- Consistent notation throughout
-- Abstract effectively summarizes the paper
-- Tables and figures are self-contained (clear labels, notes, sources)
-
-### 6. Presentation
-- Are tables and figures well-designed?
-- Is notation consistent throughout?
-- Are there any typos, grammatical errors, or formatting issues?
-- Is the paper the right length for the contribution?
+5. **Save to** auto-detected output directory. Filename: `paper_review_[sanitized_name].md`
 
 ---
 
@@ -99,51 +79,28 @@ Produce a thorough, constructive review of an academic manuscript — the kind o
 **File:** [path to manuscript]
 
 ## Summary Assessment
-
 **Overall recommendation:** [Strong Accept / Accept / Revise & Resubmit / Reject]
-
-[2-3 paragraph summary: main contribution, strengths, and key concerns]
+[2-3 paragraph summary]
 
 ## Strengths
-
 1. [Strength 1]
 2. [Strength 2]
-3. [Strength 3]
 
 ## Major Concerns
-
 ### MC1: [Title]
-- **Dimension:** [Identification / Econometrics / Argument / Literature / Writing / Presentation]
-- **Issue:** [Specific description]
+- **Dimension:** [Identification / Econometrics / Argument / Literature / Writing]
+- **Issue:** [Description]
 - **Suggestion:** [How to address it]
-- **Location:** [Section/page/table if applicable]
-
-[Repeat for each major concern]
 
 ## Minor Concerns
-
 ### mc1: [Title]
-- **Issue:** [Description]
-- **Suggestion:** [Fix]
-
-[Repeat]
 
 ## Referee Objections
-
-These are the tough questions a top referee would likely raise:
-
 ### RO1: [Question]
 **Why it matters:** [Why this could be fatal]
-**How to address it:** [Suggested response or additional analysis]
-
-[Repeat for 3-5 objections]
-
-## Specific Comments
-
-[Line-by-line or section-by-section comments, if any]
+**How to address it:** [Suggested response]
 
 ## Summary Statistics
-
 | Dimension | Rating (1-5) |
 |-----------|-------------|
 | Argument Structure | [N] |
@@ -162,6 +119,6 @@ These are the tough questions a top referee would likely raise:
 - **Be constructive.** Every criticism should come with a suggestion.
 - **Be specific.** Reference exact sections, equations, tables.
 - **Think like a referee at a top-5 journal.** What would make them reject?
-- **Distinguish fatal flaws from minor issues.** Not everything is equally important.
-- **Acknowledge what's done well.** Good research deserves recognition.
+- **Distinguish fatal flaws from minor issues.**
+- **Acknowledge what's done well.**
 - **Do NOT fabricate details.** If you can't read a section clearly, say so.

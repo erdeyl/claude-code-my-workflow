@@ -1,12 +1,15 @@
 ---
 name: research-ideation
-description: Generate structured research questions, testable hypotheses, and empirical strategies from a topic or dataset
+description: Generates structured research questions, testable hypotheses, and empirical strategies from a topic or dataset
 argument-hint: "[topic, phenomenon, or dataset description]"
+allowed-tools: Read, Grep, Glob, Write, Bash(touch *), Bash(find *), WebSearch
 context: fork
-allowed-tools: ["Read", "Grep", "Glob", "Write"]
 ---
 
 # Research Ideation
+
+ultrathink
+
 
 Generate structured research questions, testable hypotheses, and empirical strategies from a topic, phenomenon, or dataset.
 
@@ -16,14 +19,14 @@ Generate structured research questions, testable hypotheses, and empirical strat
 
 ## Steps
 
-1. **Understand the input.** Read `$ARGUMENTS` and any referenced files. Check `master_supporting_docs/` for related papers. Check `.claude/rules/` for domain conventions.
+1. **Understand the input.** Read `$ARGUMENTS` and any referenced files. Check for supporting documents and project rules (auto-detect directories).
 
 2. **Generate 3-5 research questions** ordered from descriptive to causal:
-   - **Descriptive:** What are the patterns? (e.g., "How has X evolved over time?")
-   - **Correlational:** What factors are associated? (e.g., "Is X correlated with Y after controlling for Z?")
-   - **Causal:** What is the effect? (e.g., "What is the causal effect of X on Y?")
-   - **Mechanism:** Why does the effect exist? (e.g., "Through what channel does X affect Y?")
-   - **Policy:** What are the implications? (e.g., "Would policy X improve outcome Y?")
+   - **Descriptive:** What are the patterns?
+   - **Correlational:** What factors are associated?
+   - **Causal:** What is the effect?
+   - **Mechanism:** Why does the effect exist?
+   - **Policy:** What are the implications?
 
 3. **For each research question, develop:**
    - **Hypothesis:** A testable prediction with expected sign/magnitude
@@ -35,7 +38,7 @@ Generate structured research questions, testable hypotheses, and empirical strat
 
 4. **Rank the questions** by feasibility and contribution.
 
-5. **Save the output** to `quality_reports/research_ideation_[sanitized_topic].md`
+5. **Save the output** to auto-detected output directory (`quality_reports/`, `notes/`, or current directory). Filename: `research_ideation_[sanitized_topic].md`
 
 ---
 
@@ -48,49 +51,32 @@ Generate structured research questions, testable hypotheses, and empirical strat
 **Input:** [Original input]
 
 ## Overview
-
 [1-2 paragraphs situating the topic and why it matters]
 
 ## Research Questions
 
 ### RQ1: [Question] (Feasibility: High/Medium/Low)
-
 **Type:** Descriptive / Correlational / Causal / Mechanism / Policy
-
 **Hypothesis:** [Testable prediction]
-
 **Identification Strategy:**
 - **Method:** [e.g., Difference-in-Differences]
 - **Treatment:** [What varies and when]
 - **Control group:** [Comparison units]
 - **Key assumption:** [e.g., Parallel trends]
-
 **Data Requirements:**
 - [Dataset 1 — what it provides]
-- [Dataset 2 — what it provides]
-
 **Potential Pitfalls:**
 1. [Threat 1 and possible mitigation]
-2. [Threat 2 and possible mitigation]
-
 **Related Work:** [Author (Year)], [Author (Year)]
-
----
 
 [Repeat for RQ2-RQ5]
 
 ## Ranking
-
 | RQ | Feasibility | Contribution | Priority |
 |----|-------------|-------------|----------|
-| 1  | High        | Medium      | ...      |
-| 2  | Medium      | High        | ...      |
 
 ## Suggested Next Steps
-
 1. [Most promising direction and immediate action]
-2. [Data to obtain]
-3. [Literature to review deeper]
 ```
 
 ---

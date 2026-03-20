@@ -2,21 +2,32 @@
 name: data-analysis
 description: End-to-end R data analysis workflow from exploration through regression to publication-ready tables and figures
 argument-hint: "[dataset path or description of analysis goal]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Agent"]
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash(Rscript *), Bash(R *), Bash(mkdir *), Bash(touch *), Bash(find *), Agent, WebSearch
 ---
 
 # Data Analysis Workflow
+
+ultrathink
+
 
 Run an end-to-end data analysis in R: load, explore, analyze, and produce publication-ready output.
 
 **Input:** `$ARGUMENTS` — a dataset path (e.g., `data/county_panel.csv`) or a description of the analysis goal (e.g., "regress wages on education with state fixed effects using CPS data").
 
+## Model Tiering
+
+Use the right model for each sub-task:
+- **Opus** for econometric specification decisions (identification strategy, standard error clustering, robustness check design)
+- **Sonnet** for R code generation (data wrangling, ggplot2 figures, modelsummary tables)
+
+When delegating to an Agent for code generation, use Sonnet. Keep specification reasoning in the main (Opus) context.
+
 ---
 
 ## Constraints
 
-- **Follow R code conventions** in `.claude/rules/r-code-conventions.md`
-- **Save all scripts** to `scripts/R/` with descriptive names
+- **Follow R code conventions** in `.claude/rules/r-code-conventions.md` (auto-detect if present)
+- **Save all scripts** to a `scripts/R/` or `code/R/` directory (auto-detect from project structure)
 - **Save all outputs** (figures, tables, RDS) to `output/`
 - **Use `saveRDS()`** for every computed object — Quarto slides may need them
 - **Use project theme** for all figures (check for custom theme in `.claude/rules/`)
@@ -28,7 +39,7 @@ Run an end-to-end data analysis in R: load, explore, analyze, and produce public
 
 ### Phase 1: Setup and Data Loading
 
-1. Read `.claude/rules/r-code-conventions.md` for project standards
+1. Read `.claude/rules/r-code-conventions.md` for project standards (if it exists)
 2. Create R script with proper header (title, author, purpose, inputs, outputs)
 3. Load required packages at top (`library()`, never `require()`)
 4. Set seed once at top: `set.seed(42)`
@@ -71,11 +82,10 @@ Based on the research question:
 
 1. `saveRDS()` for all key objects (regression results, summary tables, processed data)
 2. Create `output/` subdirectories as needed with `dir.create(..., recursive = TRUE)`
-3. Run the r-reviewer agent on the generated script:
+3. Delegate to an Agent for r-reviewer:
 
 ```
-Delegate to the r-reviewer agent:
-"Review the script at scripts/R/[script_name].R"
+Review the script at <scripts-dir>/[script_name].R
 ```
 
 4. Address any Critical or High issues from the review.

@@ -1,13 +1,15 @@
 ---
 name: create-lecture
-description: Create a new Beamer lecture from papers, existing slides, R scripts, and other materials. Guides the content creation process with notation consistency, pedagogical patterns, and collaborative iteration.
+description: Creates new Beamer lecture from papers and materials. Guided workflow with notation consistency.
+argument-hint: "[Topic name]"
 disable-model-invocation: true
-argument-hint: "[Topic name, e.g., 'Synthetic Control' or 'Regression Discontinuity']"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Agent"]
-context: fork
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash(xelatex *), Bash(bibtex *), Bash(touch *), Bash(find *), Bash(open *), Agent, WebSearch
 ---
 
 # Lecture Creation Workflow
+
+ultrathink
+
 
 Create a beautiful, pedagogically excellent Beamer lecture deck.
 
@@ -33,14 +35,14 @@ Create a beautiful, pedagogically excellent Beamer lecture deck.
 ## WORKFLOW
 
 ### Phase 0: Intake & Context
-- Read knowledge base and creation guide
+- Read knowledge base and creation guide (auto-detect `.claude/rules/` or project docs)
 - Inventory provided materials (papers, slides, code)
 - Read previous lecture's structure and ending
 - State pedagogical goal, get user confirmation
 
 ### Phase 1: Paper Analysis (When Papers Provided)
 - Split into chunks, extract key ideas
-- Map paper notation → course notation
+- Map paper notation to course notation
 - Identify slide-worthy content
 - Present summary for approval
 

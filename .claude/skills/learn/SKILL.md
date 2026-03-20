@@ -1,16 +1,15 @@
 ---
 name: learn
-description: |
-  Extract reusable knowledge from the current session into a persistent skill.
-  Use when you discover something non-obvious, create a workaround, or develop
-  a multi-step workflow that future sessions would benefit from.
-author: Claude Code Academic Workflow
-version: 1.0.0
+description: Extracts reusable knowledge from the current session into a persistent skill. Use when you discover something non-obvious, create a workaround, or develop a multi-step workflow.
 argument-hint: "[skill-name (kebab-case)]"
-allowed-tools: ["Read", "Write", "Bash", "Glob", "Grep"]
+disable-model-invocation: true
+allowed-tools: Read, Write, Bash(ls *), Bash(grep *), Bash(touch *), Bash(find *), Glob, Grep, WebSearch
 ---
 
-# /learn — Skill Extraction Workflow
+# Learn — Skill Extraction Workflow
+
+ultrathink
+
 
 Extract non-obvious discoveries into reusable skills that persist across sessions.
 
@@ -52,50 +51,15 @@ grep -r -i "KEYWORD" .claude/skills/ 2>/dev/null
 ```
 
 **Outcomes:**
-- Nothing related → Create new skill (continue to Phase 3)
-- Same trigger & fix → Update existing skill (bump version)
-- Partial overlap → Update with new variant
+- Nothing related: Create new skill (continue to Phase 3)
+- Same trigger & fix: Update existing skill (bump version)
+- Partial overlap: Update with new variant
 
 ### PHASE 3: Create Skill
 
-Create the skill file at `.claude/skills/[skill-name]/SKILL.md`:
-
-```yaml
----
-name: descriptive-kebab-case-name
-description: |
-  [CRITICAL: Include specific triggers in the description]
-  - What the skill does
-  - Specific trigger conditions (exact error messages, symptoms)
-  - When to use it (contexts, scenarios)
-author: Claude Code Academic Workflow
-version: 1.0.0
-argument-hint: "[expected arguments]"  # Optional
----
-
-# Skill Name
-
-## Problem
-[Clear problem description — what situation triggers this skill]
-
-## Context / Trigger Conditions
-[When to use — exact error messages, symptoms, scenarios]
-[Be specific enough that you'd recognize it again]
-
-## Solution
-[Step-by-step solution]
-[Include commands, code snippets, or workflows]
-
-## Verification
-[How to verify it worked]
-[Expected output or state]
-
-## Example
-[Concrete example of the skill in action]
-
-## References
-[Documentation links, related files, or prior discussions]
-```
+Create the skill file at `.claude/skills/[skill-name]/SKILL.md` with proper frontmatter including:
+- `name`, `description` (with specific trigger conditions), `argument-hint`, `allowed-tools`
+- Problem, context/trigger conditions, solution steps, verification, example, references
 
 ### PHASE 4: Quality Gates
 
@@ -113,49 +77,7 @@ Before finalizing, verify:
 After creating the skill, report:
 
 ```
-✓ Skill created: .claude/skills/[name]/SKILL.md
+Skill created: .claude/skills/[name]/SKILL.md
   Trigger: [when to use]
   Problem: [what it solves]
-```
-
-## Example: Creating a Skill
-
-User discovers that a specific R package silently drops observations:
-
-```markdown
----
-name: fixest-missing-covariate-handling
-description: |
-  Handle silent observation dropping in fixest when covariates have missing values.
-  Use when: estimates seem wrong, sample size unexpectedly small, or comparing
-  results between packages.
-author: Claude Code Academic Workflow
-version: 1.0.0
----
-
-# fixest Missing Covariate Handling
-
-## Problem
-The fixest package silently drops observations when covariates have NA values,
-which can produce unexpected results when comparing to other packages.
-
-## Context / Trigger Conditions
-- Sample size in fixest is smaller than expected
-- Results differ from Stata or other R packages
-- Model has covariates with potential missing values
-
-## Solution
-1. Check for NA patterns before regression:
-   ```r
-   summary(complete.cases(data[, covariates]))
-   ```
-2. Explicitly handle NA values or use `na.action` parameter
-3. Document the expected sample size in comments
-
-## Verification
-Compare `nobs(model)` with `nrow(data)` — difference indicates dropped obs.
-
-## References
-- fixest documentation on missing values
-- [LEARN:r-code] entry in MEMORY.md
 ```

@@ -1,14 +1,16 @@
 ---
 name: devils-advocate
-description: Challenge a slide deck design with 5-7 specific pedagogical questions. Checks ordering, prerequisites, gaps, alternatives, notation conflicts, cognitive load, and book readiness.
-disable-model-invocation: true
-argument-hint: "[Lecture filename or topic description]"
+description: Challenges slide design with 5-7 pedagogical questions. Checks ordering, prerequisites, and cognitive load.
+argument-hint: "[Lecture filename]"
+allowed-tools: Read, Grep, Glob, Bash(touch *), Bash(find *), WebSearch
 context: fork
 agent: Explore
-allowed-tools: ["Read", "Grep", "Glob"]
 ---
 
 # Devil's Advocate Review
+
+ultrathink
+
 
 Critically examine a slide deck and challenge its design with 5-7 specific pedagogical questions.
 
@@ -18,8 +20,8 @@ Critically examine a slide deck and challenge its design with 5-7 specific pedag
 
 ## Setup
 
-1. **Read the target file** (the lecture being challenged)
-2. **Read the knowledge base** in `.claude/rules/` for notation conventions and narrative arc
+1. **Read the target file** (the lecture being challenged). Auto-detect in `Slides/`, `Quarto/`, `decks/`, or use `$ARGUMENTS` as direct path.
+2. **Read the knowledge base** in `.claude/rules/` for notation conventions and narrative arc (if present)
 3. If applicable, **read adjacent lectures** for narrative continuity
 
 ---
