@@ -196,7 +196,53 @@ brew doctor 2>&1 | head -10
 
 If any smoke test fails, report the failure prominently and suggest rollback steps.
 
-## Step 6: Summary report
+## Step 6: Sync backup repo
+
+After all updates and smoke tests pass, sync the live `~/.claude/` setup to the backup repo and push.
+
+**Repo location:** `~/Library/CloudStorage/GoogleDrive-erdeyl@erdey.info/Saját meghajtó/Claude/claude-code-my-workflow`
+**Remote:** `origin` → `https://github.com/erdeyl/claude-code-my-workflow`
+
+```bash
+REPO="$HOME/Library/CloudStorage/GoogleDrive-erdeyl@erdey.info/Saját meghajtó/Claude/claude-code-my-workflow"
+
+# Sync skills (mirror live state, remove deleted skills)
+rsync -av --delete --exclude='.git' "$HOME/.claude/skills/" "$REPO/.claude/skills/"
+
+# Remove any nested .git dirs from cloned skills
+find "$REPO/.claude/skills" -mindepth 2 -name ".git" -type d -exec rm -rf {} + 2>/dev/null
+find "$REPO/.claude/skills" -mindepth 2 -name ".git" -type f -exec rm -f {} + 2>/dev/null
+
+# Sync other config files
+cp "$HOME/.claude/settings.json" "$REPO/.claude/settings.json"
+[ -d "$HOME/.claude/hooks" ] && rsync -av --delete "$HOME/.claude/hooks/" "$REPO/.claude/hooks/"
+[ -d "$HOME/.claude/rules" ] && rsync -av --delete "$HOME/.claude/rules/" "$REPO/.claude/rules/"
+[ -d "$HOME/.claude/agents" ] && rsync -av --delete "$HOME/.claude/agents/" "$REPO/.claude/agents/"
+[ -d "$HOME/.claude/scripts" ] && mkdir -p "$REPO/.claude/scripts" && rsync -av --delete "$HOME/.claude/scripts/" "$REPO/.claude/scripts/"
+
+# Export venv requirements
+"$HOME/.claude/venv/bin/pip" freeze > "$REPO/.claude/requirements.txt" 2>/dev/null
+
+# Sync MEMORY.md and CLAUDE.md from project memory
+PROJECT_DIR="$HOME/.claude/projects/-Users-erdeylaszlo-Library-CloudStorage-GoogleDrive-erdeyl-erdey-info-Saj-t-meghajt--Claude"
+[ -f "$PROJECT_DIR/memory/MEMORY.md" ] && cp "$PROJECT_DIR/memory/MEMORY.md" "$REPO/MEMORY.md"
+[ -f "$PROJECT_DIR/CLAUDE.md" ] && cp "$PROJECT_DIR/CLAUDE.md" "$REPO/CLAUDE.md"
+```
+
+Then check if there are changes to commit:
+
+```bash
+cd "$REPO" && git add -A && git diff --cached --quiet
+```
+
+If there are staged changes:
+1. Commit with a descriptive message summarizing what changed (updated skills, new packages, config changes, etc.)
+2. Push to `origin main`
+3. Report the commit hash and file count in the summary
+
+If no changes, report "Backup repo already up to date" in the summary.
+
+## Step 7: Summary report
 
 Present a clean, scannable report:
 
@@ -231,6 +277,10 @@ Present a clean, scannable report:
 
 ### Machine-side novelties
 - [description of any relevant finding, or "No actionable novelties found"]
+
+### Backup repo
+- Synced and pushed to erdeyl/claude-code-my-workflow @ [commit-hash]
+- N files changed (+X / -Y lines)
 
 ### Smoke tests
 - All core tools: PASS ✓
