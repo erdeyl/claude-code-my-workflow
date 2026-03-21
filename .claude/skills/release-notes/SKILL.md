@@ -3,6 +3,7 @@ name: release-notes
 description: Generates release notes from git history, PRs, and changelog entries. Use when asked to create release notes, a changelog, or summarize changes for a version or time period.
 argument-hint: [version-or-range]
 allowed-tools: Bash(git *), Bash(gh *), Read, Grep, Glob, Agent, WebSearch
+context: fork
 ---
 
 # Release Notes Generator
